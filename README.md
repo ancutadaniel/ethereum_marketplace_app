@@ -49,6 +49,4 @@ You should be able to create a new task and submit to blockchain
 
 You should be able to mark as done or in progress the task
 
-This app is also deployed on Rinkeby Test Network - Contract address :
-
-0x5cc653fed47d5F131F60CD2061579901B3aFd727
+You can buy or sell products - on test networks
