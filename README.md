@@ -2,7 +2,7 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-You can clone this project from here - https://github.com/ancutadaniel
+You can clone this project from here - https://github.com/ancutadaniel/ethereum_marketplace_app
 
 ## Available Scripts
 
@@ -15,6 +15,10 @@ In the project directory, you can run in terminal:
 2 - Check and start the Ganache Blockchain locally
 
 3 - Check Metamask to have proper network selected - RPC - http://127.0.0.1:7545 - custom network
+
+3.a) - You can run this app on Rinkeby Test Network - RPC - https://rinkeby.infura.io/v3/
+
+3.b) - Contract address : 0x5cc653fed47d5F131F60CD2061579901B3aFd727
 
 4 - Import an account from Ganache to have ETH available for transactions
 
