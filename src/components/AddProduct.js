@@ -1,43 +1,47 @@
-import { useState } from 'react';
-import { Button, Form, Message } from 'semantic-ui-react';
+import { Button, Form } from 'semantic-ui-react';
+import * as ACTIONS from '../redux_hooks/constants';
 
-const AddProduct = ({ contract, accounts, web3, showProducts }) => {
-  const [loading, setLoading] = useState(false);
-  const [productName, setProductName] = useState('');
-  const [productPrice, setProductPrice] = useState(0);
-  const [errorStatus, setErrorStatus] = useState(false);
+const AddProduct = ({ state, dispatch }) => {
+  const { contract, web3, account, productName, productPrice, loading } = state;
+  const {
+    SET_ERROR,
+    SET_PRODUCT_NAME,
+    SET_PRODUCT_PRICE,
+    SET_FORM_LOADING,
+    RESET_FORM,
+  } = ACTIONS;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
+    dispatch({ type: SET_FORM_LOADING });
     try {
       const price = web3.utils.toWei(productPrice.toString(), 'ether');
       await contract.methods
         .createProduct(productName, price)
-        .send({ from: accounts[0] });
-      showProducts();
-      setLoading(false);
+        .send({ from: account });
+
+      dispatch({ type: RESET_FORM });
     } catch (error) {
-      console.log(error);
+      dispatch({ type: SET_ERROR, value: error });
     }
   };
 
   const handleProductName = (e) => {
-    setProductName(e.target.value);
+    dispatch({ type: SET_PRODUCT_NAME, value: e.target.value });
   };
 
   const handleProductPrice = (e) => {
-    try {
-      if (e.target.value === '') throw new Error();
-      setProductPrice(e.target.value);
-      setErrorStatus(false);
-    } catch (error) {
-      setErrorStatus(true);
-    }
+    +e.target.value <= 0
+      ? dispatch({
+          type: SET_ERROR,
+          value: new Error('You should enter a value higher than 0'),
+        })
+      : dispatch({ type: SET_ERROR, value: null });
+    dispatch({ type: SET_PRODUCT_PRICE, value: e.target.value });
   };
 
   return (
-    <Form onSubmit={handleSubmit} loading={loading} error={errorStatus}>
+    <Form onSubmit={handleSubmit} loading={loading}>
       <Form.Input
         label='Product Name'
         placeholder='Product Name'
@@ -52,15 +56,14 @@ const AddProduct = ({ contract, accounts, web3, showProducts }) => {
         value={productPrice}
         onChange={handleProductPrice}
         required
-        type='number'
-        min='0'
+        type='text'
       />
-      <Message
-        error
-        header='Action Forbidden'
-        content={'Cannot set price to empty!!!'}
-      />
-      <Button color='purple' type='submit'>
+
+      <Button
+        color='purple'
+        type='submit'
+        disabled={productName === '' || productPrice === 0}
+      >
         Submit New Product
       </Button>
     </Form>

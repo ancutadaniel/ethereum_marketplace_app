@@ -1,23 +1,51 @@
+import { useCallback, useEffect } from 'react';
 import { Table, Icon, Button } from 'semantic-ui-react';
+import * as ACTIONS from '../redux_hooks/constants';
 
-const Products = ({ products, web3, contract, accounts, showProducts }) => {
-  const [header] = products.map((item) => {
-    let arr = [];
-    arr = [...Object.keys(item)];
-    arr.push('');
-    return arr;
-  });
+const Products = ({ state, dispatch }) => {
+  const { contract, web3, account, products, header, loadProducts } = state;
 
-  const handlePurchaseProduct = async (id, price) => {
+  const { SET_ERROR, SET_PRODUCTS } = ACTIONS;
+
+  const showProducts = useCallback(async () => {
     try {
-      await contract.methods
-        .purchaseProduct(id)
-        .send({ from: accounts[0], value: price });
-      showProducts();
+      const productCount = await contract.methods.productCount().call();
+      let productsArr = [];
+      for (let i = 1; i <= productCount; i++) {
+        const product = await contract.methods.products(i).call();
+        const { id, name, owner, price, purchased } = product;
+        productsArr.push({
+          id: +id,
+          name,
+          owner,
+          price,
+          purchased,
+        });
+      }
+
+      dispatch({ type: SET_PRODUCTS, value: productsArr });
     } catch (error) {
-      console.log(error);
+      dispatch({ type: SET_ERROR, value: error });
     }
-  };
+  }, [SET_ERROR, SET_PRODUCTS, contract.methods, dispatch]);
+
+  const handlePurchaseProduct = useCallback(
+    async (id, price) => {
+      try {
+        await contract.methods
+          .purchaseProduct(id)
+          .send({ from: account, value: price });
+        showProducts();
+      } catch (error) {
+        dispatch({ type: SET_ERROR, value: error });
+      }
+    },
+    [showProducts, contract.methods, dispatch, SET_ERROR, account]
+  );
+
+  useEffect(() => {
+    loadProducts && showProducts();
+  }, [loadProducts, showProducts]);
 
   return (
     <Table celled>
