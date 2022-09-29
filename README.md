@@ -10,20 +10,6 @@ In the project directory, you can run in terminal:
 
 ### `npm install`
 
-1 - Install all dependencies for this project
-
-2 - Check and start the Ganache Blockchain locally
-
-3 - Check Metamask to have proper network selected - RPC - http://127.0.0.1:7545 - custom network
-
-3.a) - You can run this app on Rinkeby Test Network - RPC - https://rinkeby.infura.io/v3/
-
-3.b) - Contract address : 0x5cc653fed47d5F131F60CD2061579901B3aFd727
-
-4 - Import an account from Ganache to have ETH available for transactions
-
-5 - After you install dependencies and prepare Ganache and Metamask you can run:
-
 ### `truffle compile && truffle migrate --reset`
 
 6 - Run test to see that everything is ok
@@ -50,3 +36,17 @@ You should be able to create a new task and submit to blockchain
 You should be able to mark as done or in progress the task
 
 You can buy or sell products - on test networks
+
+### Deployment Solidity Contracts
+
+- localhost
+  `truffle migrate`
+
+- goerli
+  `truffle migrate --network goerli`
+
+- to run test
+  `truffle test`
+
+- combined
+  `truffle compile && truffle migrate --network goerli`

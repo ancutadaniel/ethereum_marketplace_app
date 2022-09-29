@@ -7,5 +7,5 @@ export const SET_PRODUCT_PRICE = 'SET_PRODUCT_PRICE';
 export const SET_FORM_LOADING = 'SET_FORM_LOADING';
 export const RESET_FORM = 'RESET_FORM';
 
-export const URL = `https://ipfs.infura.io/ipfs/`;
+export const URL = `https://dropbox.infura-ipfs.io/ipfs/`;
 export const ADD_NEW_POST = 'Add New Post';
